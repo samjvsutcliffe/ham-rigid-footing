@@ -7,7 +7,7 @@
   (format t "Thread count ~D~%" threads))
 
 (defun run (&key (output-dir (format nil "./output/")))
-  (let* ((lstps 5)
+  (let* ((lstps 50)
          (total-disp -2d-3)
          (current-disp 0d0)
          (step 0))
@@ -30,9 +30,9 @@
                        (incf step))
      :load-steps lstps
      :enable-plastic t
-     :damping (sqrt 2)
+     :damping 1d0;(sqrt 2)
      :substeps 50
-     :criteria 1d-3
+     :criteria 1d-6
      :save-vtk-dr nil
      :save-vtk-loadstep nil
      :dt-scale 1d0)))
@@ -48,7 +48,7 @@
 (defun test ()
   (let ((r *refine*)
         (fbar *enable-fbar*))
-    (setup :mps 2 :refine r :enable-fbar fbar)
+    (setup :mps 4 :refine r :enable-fbar fbar)
     (run :output-dir (format nil "./data/output-~D_~A/" r fbar))
     (save-csv "./results/" (format nil "data_~D_~A.csv" r fbar) *data-disp* *data-load*)))
 (test)

@@ -6,7 +6,7 @@ mkdir data
 mkdir results
 read -p "Do you want to clear previous data? (y/n)" yn
 case $yn in
-    [yY] ) echo "Removing data";rm data/*; break;;
+    [yY] ) echo "Removing data";rm -r data/*;rm results/*; break;;
     [nN] ) break;;
 esac
 set -e
@@ -14,8 +14,12 @@ module load aocc/5.0.0
 module load aocl/5.0.0
 sbcl --dynamic-space-size 16000 --load "build.lisp" --quit
 
-for h in 50 100 150
+for r in 1 2 3 4
 do
-    export REFINE=$h
-    sbatch batch_fbar.sh
+    for F in TRUE FALSE
+    do
+        export REFINE=$r
+        export FBAR=$F
+        sbatch batch_fbar.sh
+    done
 done
