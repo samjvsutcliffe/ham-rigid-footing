@@ -3,13 +3,13 @@
 (sb-ext:restrict-compiler-policy 'safety 0 0)
 (setf *block-compile-default* t)
 
-(ql:quickload :cl-mpm/examples)
-(in-package :cl-mpm/examples)
+(ql:quickload :cl-mpm/examples/fbar/rigid-footing)
+(in-package :cl-mpm/examples/fbar/rigid-footing)
 
 (setf cl-mpm/settings::*optimise-setting* cl-mpm/settings::*optimise-speed*)
 
 (defun main (&optional args)
-	(load "template.lisp"))
+	(load "rigid-footing.lisp"))
 
 (sb-ext:save-lisp-and-die
    "worker"
