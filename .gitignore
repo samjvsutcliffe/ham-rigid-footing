@@ -18,4 +18,5 @@
 results/
 data/
 worker
-
+slurm-*
+*.pgf

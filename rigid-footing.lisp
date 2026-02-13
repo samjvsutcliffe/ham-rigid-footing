@@ -6,8 +6,10 @@
   (setf lparallel:*kernel* (lparallel:make-kernel threads :name "custom-kernel"))
   (format t "Thread count ~D~%" threads))
 
-(defun run (&key (output-dir (format nil "./output/")))
-  (let* ((lstps 50)
+(defun run (&key (output-dir (format nil "./output/"))
+              (csv-dir (format nil "./output/"))
+              (csv-filename (format nil "load-disp.csv")))
+  (let* ((lstps 100)
          (total-disp -2d-3)
          (current-disp 0d0)
          (step 0))
@@ -24,9 +26,10 @@
                           (cl-mpm/utils:vector-from-list (list 0d0 current-disp 0d0))))
      :post-conv-step (lambda (sim)
                        (push current-disp *data-disp*)
-                       (let ((load (* 2d0 (cl-mpm/penalty::resolve-load *penalty*))))
+                       (let ((load (get-load)))
                          (format t "Load ~E~%" load)
                          (push load *data-load*))
+                       (save-csv csv-dir csv-filename *data-disp* *data-load*)
                        (incf step))
      :load-steps lstps
      :enable-plastic t
@@ -49,6 +52,7 @@
   (let ((r *refine*)
         (fbar *enable-fbar*))
     (setup :mps 4 :refine r :enable-fbar fbar)
-    (run :output-dir (format nil "./data/output-~D_~A/" r fbar))
-    (save-csv "./results/" (format nil "data_~D_~A.csv" r fbar) *data-disp* *data-load*)))
+    (run :output-dir (format nil "./data/output-~D_~A/" r fbar)
+         :csv-dir "./results/"
+         :csv-filename (format nil "data_~D_~A.csv" r fbar))))
 (test)
